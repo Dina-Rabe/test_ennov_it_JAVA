@@ -1,6 +1,7 @@
 package com.example.springboot.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -18,24 +19,36 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllUsers'");
+        return userRepository.findAll();
     }
 
     public List<Ticket> getTicketsByUserId(Long userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTicketsByUserId'");
+        @SuppressWarnings("null")
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return user.getAssignedTickets();
+        }
+        throw new IllegalArgumentException("User not found for userId: " + userId);
     }
 
+    @SuppressWarnings("null")
     public User createUser(User user) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createUser'");
+        return userRepository.save(user);
     }
 
     public User updateUser(Long userId, User updatedUser) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+        @SuppressWarnings("null")
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setUsername(updatedUser.getUsername());
+            user.setEmail(updatedUser.getEmail());
+            // Set other updated fields as needed
+            return userRepository.save(user);
+        }
+        throw new IllegalArgumentException("User not found for userId: " + userId);
     }
 
-    // Méthodes de service pour les opérations CRUD sur les utilisateurs
+    // Additional CRUD methods for users can be implemented here
 }

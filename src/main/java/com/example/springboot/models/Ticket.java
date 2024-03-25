@@ -1,4 +1,5 @@
 package com.example.springboot.models;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,7 +18,59 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
 
-    // Constructeurs, getters et setters
+    // Constructors
 
-    // Autres méthodes spécifiques à la classe Ticket
+    public Ticket() {
+    }
+
+    public Ticket(String title, String description, User assignedUser, TicketStatus status) {
+        this.title = title;
+        this.description = description;
+        this.assignedUser = assignedUser;
+        this.status = status;
+    }
+
+    // Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public User getAssignedUser() {
+        return assignedUser;
+    }
+
+    public void setAssignedUser(User assignedUser) {
+        this.assignedUser = assignedUser;
+    }
+
+    public TicketStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TicketStatus status) {
+        this.status = status;
+    }
+
+    // Other specific methods for the Ticket class
 }

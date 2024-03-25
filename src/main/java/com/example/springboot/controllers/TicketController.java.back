@@ -18,6 +18,11 @@ import com.example.springboot.services.TicketService;
 @RequestMapping("/tickets")
 public class TicketController {
     
+    @GetMapping("/")
+	public String index() {
+		return " POINS TICKET!";
+	}
+
     private final TicketService ticketService;
 
     public TicketController(TicketService ticketService) {
