@@ -6,5 +6,5 @@ import com.example.springboot.models.Ticket;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-    // Ajoutez les méthodes spécifiques si nécessaire
+    
 }

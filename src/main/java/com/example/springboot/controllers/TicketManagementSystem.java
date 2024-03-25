@@ -8,7 +8,7 @@ public class TicketManagementSystem {
 
 	@GetMapping("/")
 	public String index() {
-		return " TENA Poins sa tsy poins?";
+		return "TEST JAVA SPING BOOT ENNOV-IT";
 	}
 
 }

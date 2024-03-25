@@ -66,5 +66,5 @@ public class TicketControllerTest {
         verify(ticketService, times(1)).getTicketById(ticketId);
     }
 
-    // Similar tests for other methods can be added here
+    
 }

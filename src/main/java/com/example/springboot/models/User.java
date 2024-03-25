@@ -15,7 +15,7 @@ public class User {
     @OneToMany(mappedBy = "assignedUser")
     private List<Ticket> assignedTickets;
 
-    // Constructors
+    
 
     public User() {
     }
@@ -25,7 +25,7 @@ public class User {
         this.email = email;
     }
 
-    // Getters and Setters
+   
 
     public Long getId() {
         return id;
@@ -59,5 +59,5 @@ public class User {
         this.assignedTickets = assignedTickets;
     }
 
-    // Other specific methods for the User class
+   
 }

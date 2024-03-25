@@ -77,5 +77,5 @@ public class TicketServiceTest {
         verify(ticketRepository, times(1)).findById(ticketId);
     }
 
-    // Similar tests for other methods can be added here
+    
 }

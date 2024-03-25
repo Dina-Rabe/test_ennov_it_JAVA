@@ -134,5 +134,5 @@ public class UserServiceTest {
         verify(userRepository, never()).save(any());
     }
 
-    // Additional test cases for other methods can be added here
+    
 }

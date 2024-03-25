@@ -78,5 +78,5 @@ public class UserControllerTest {
         verify(userService, times(1)).updateUser(userId, updatedUser);
     }
 
-    // Additional test cases for other methods can be added here
+    
 }

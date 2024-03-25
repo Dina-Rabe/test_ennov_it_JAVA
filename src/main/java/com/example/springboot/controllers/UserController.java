@@ -49,6 +49,5 @@ public class UserController {
         return userService.updateUser(userId, updatedUser);
     }
     
-    // Autres méthodes et points de terminaison
     
 }

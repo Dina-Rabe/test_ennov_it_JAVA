@@ -6,5 +6,5 @@ import com.example.springboot.models.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // Ajoutez les méthodes spécifiques si nécessaire
+   
 }

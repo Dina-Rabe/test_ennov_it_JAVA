@@ -41,7 +41,7 @@ public class TicketService {
             Ticket ticket = optionalTicket.get();
             ticket.setTitle(updatedTicket.getTitle());
             ticket.setDescription(updatedTicket.getDescription());
-            // Set other updated fields as needed
+           
             return ticketRepository.save(ticket);
         }
         throw new IllegalArgumentException("Ticket not found for ticketId: " + ticketId);
@@ -77,5 +77,5 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
-    // Additional CRUD methods for tickets can be implemented here
+   
 }

@@ -44,11 +44,11 @@ public class UserService {
             User user = optionalUser.get();
             user.setUsername(updatedUser.getUsername());
             user.setEmail(updatedUser.getEmail());
-            // Set other updated fields as needed
+           
             return userRepository.save(user);
         }
         throw new IllegalArgumentException("User not found for userId: " + userId);
     }
 
-    // Additional CRUD methods for users can be implemented here
+   
 }

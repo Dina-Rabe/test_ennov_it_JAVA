@@ -18,7 +18,7 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
 
-    // Constructors
+   
 
     public Ticket() {
     }
@@ -30,7 +30,7 @@ public class Ticket {
         this.status = status;
     }
 
-    // Getters and Setters
+   
 
     public Long getId() {
         return id;
@@ -72,5 +72,5 @@ public class Ticket {
         this.status = status;
     }
 
-    // Other specific methods for the Ticket class
+    
 }
