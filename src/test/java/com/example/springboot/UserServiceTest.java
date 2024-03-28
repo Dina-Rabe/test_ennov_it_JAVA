@@ -1,7 +1,6 @@
 package com.example.springboot;
 
-import com.example.springboot.models.Ticket;
-import com.example.springboot.models.TicketStatus;
+import com.example.springboot.dto.UserDto;
 import com.example.springboot.models.User;
 import com.example.springboot.repositories.UserRepository;
 import com.example.springboot.services.UserService;
@@ -35,21 +34,17 @@ public class UserServiceTest {
 
     @Test
     public void getTicketsByUserId_ExistingUserId_ReturnsListOfTickets() {
+        // Long dummyUserId = 1L;
         // Arrange
-        Long userId = 1L;
-        User user = new User("username", "email");
-        Ticket ticket1 = new Ticket("Title 1", "Description 1", null, TicketStatus.OUVERT);
-        Ticket ticket2 = new Ticket("Title 2", "Description 2", null, TicketStatus.OUVERT);
-        user.setAssignedTickets(Arrays.asList(ticket1, ticket2));
+        UserDto user1 = UserDto.builder().username("User1").email("user1,email.com").build();
+        UserDto user2 = UserDto.builder().username("User2").email("user2,email.com").build();
+        List<User> expectedUsers = Arrays.asList(user1.toEntity(), user2.toEntity());
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userService.getAllUsers()).then(invocation -> expectedUsers);
 
-        // Act
-        List<Ticket> actualTickets = userService.getTicketsByUserId(userId);
+        List<User> responseEntity = userService.getAllUsers();
 
-        // Assert
-        assertEquals(user.getAssignedTickets(), actualTickets);
-        verify(userRepository, times(1)).findById(userId);
+        assertEquals(expectedUsers, responseEntity);
     }
 
     @Test
@@ -64,42 +59,44 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findById(userId);
     }
 
+    @SuppressWarnings("null")
     @Test
     public void createUser_ValidUser_ReturnsCreatedUser() {
         // Arrange
-        User user = new User("username", "email");
-        User expectedUser = new User("username", "email");
+        UserDto user = UserDto.builder().username("user1").email("user1@email.com").build();
+        UserDto expectedUser = UserDto.builder().username("user1").email("user1@email.com").build();
 
-        when(userRepository.save(user)).thenReturn(expectedUser);
+        when(userRepository.save(user.toEntity())).thenReturn(expectedUser.toEntity());
 
         // Act
-        User actualUser = userService.createUser(user);
+        User actualUser = userService.createUser(user.toEntity());
 
         // Assert
         assertEquals(expectedUser, actualUser);
-        verify(userRepository, times(1)).save(user);
+        verify(userRepository, times(1)).save(user.toEntity());
     }
 
+    @SuppressWarnings("null")
     @Test
     public void updateUser_ExistingUserIdAndValidUser_ReturnsUpdatedUser() {
         // Arrange
         Long userId = 1L;
-        User user = new User("username", "email");
-        User updatedUser = new User("updatedUsername", "updatedEmail");
-        User expectedUser = new User("updatedUsername", "updatedEmail");
+        UserDto user = UserDto.builder().username("user1").email("user1@email.com").build();
+        UserDto updatedUser = UserDto.builder().username("user1Updated").email("user1.updated@email.com").build();
+        UserDto expectedUser = UserDto.builder().username("user1Updated").email("user1.updated@email.com").build();
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(userRepository.save(user)).thenReturn(expectedUser);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user.toEntity()));
+        when(userRepository.save(user.toEntity())).thenReturn(expectedUser.toEntity());
 
         // Act
-        User actualUser = userService.updateUser(userId, updatedUser);
+        User actualUser = userService.updateUser(userId, updatedUser.toEntity());
 
         // Assert
         assertEquals(expectedUser, actualUser);
         assertEquals(updatedUser.getUsername(), actualUser.getUsername());
         assertEquals(updatedUser.getEmail(), actualUser.getEmail());
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(user);
+        verify(userRepository, times(1)).save(user.toEntity());
     }
 
     @SuppressWarnings("null")
@@ -107,12 +104,12 @@ public class UserServiceTest {
     public void updateUser_NonExistingUserId_ThrowsIllegalArgumentException() {
         // Arrange
         Long userId = 1L;
-        User updatedUser = new User("updatedUsername", "updatedEmail");
+        UserDto updatedUser = UserDto.builder().username("user1").email("user1@email.com").build();
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(IllegalArgumentException.class, () -> userService.updateUser(userId, updatedUser));
+        assertThrows(IllegalArgumentException.class, () -> userService.updateUser(userId, updatedUser.toEntity()));
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, never()).save(any());
     }

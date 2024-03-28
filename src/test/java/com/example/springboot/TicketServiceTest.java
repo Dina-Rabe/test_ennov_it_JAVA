@@ -1,7 +1,6 @@
 package com.example.springboot;
 import com.example.springboot.dto.TicketDto;
 import com.example.springboot.models.Ticket;
-import com.example.springboot.models.TicketStatus;
 import com.example.springboot.repositories.TicketRepository;
 import com.example.springboot.repositories.UserRepository;
 import com.example.springboot.services.ITicketService;

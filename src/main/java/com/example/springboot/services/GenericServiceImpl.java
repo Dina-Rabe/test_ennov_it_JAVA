@@ -11,12 +11,14 @@ public abstract class GenericServiceImpl<T, ID extends Serializable> implements 
 
     protected  GenericRepository<T, ID> repository;
 
+    @SuppressWarnings("null")
     @Override
     public Optional<T> findById(ID id) {
         Assert.notNull(id, "ID is mandatory");
         return repository.findById(id);
     }
 
+    @SuppressWarnings("null")
     @Override
     public T save(T entity) {
         Assert.notNull(entity, "Entity is mandatory");
@@ -24,6 +26,7 @@ public abstract class GenericServiceImpl<T, ID extends Serializable> implements 
         return repository.save(entity);
     }
 
+    @SuppressWarnings("null")
     @Override
     public T update(ID id, T entity) {
         Assert.notNull(id, "ID is mandatory");
@@ -39,6 +42,7 @@ public abstract class GenericServiceImpl<T, ID extends Serializable> implements 
         return save(entity);
     }
 
+    @SuppressWarnings("null")
     @Override
     public Boolean delete(ID id) {
         Assert.notNull(id, "ID is mandatory");

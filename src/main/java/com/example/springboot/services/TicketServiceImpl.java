@@ -33,6 +33,7 @@ public class TicketServiceImpl extends GenericServiceImpl<Ticket, Long> implemen
     public TicketDto assignTicketToUser(Long ticketId, Long userId) {
         Assert.notNull(ticketId, "Ticket::id is mandatory");
         Assert.notNull(userId, "User::id is mandatory");
+        @SuppressWarnings("null")
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             throw new IllegalArgumentException("No user found with the given id " + userId);
@@ -49,6 +50,7 @@ public class TicketServiceImpl extends GenericServiceImpl<Ticket, Long> implemen
     public List<TicketDto> getAllTickets(Long userId) {
         Assert.notNull(userId, "ID is mandatory");
 
+        @SuppressWarnings("null")
         Optional<User> userById = userRepository.findById(userId);
         if (userById.isEmpty()) {
             throw new IllegalArgumentException("No user found with the given id " + userId);
@@ -57,6 +59,7 @@ public class TicketServiceImpl extends GenericServiceImpl<Ticket, Long> implemen
         return ((TicketRepository) repository).findAllByAssignedUser(userById.get()).stream().map(Ticket::ticketDto).collect(Collectors.toList());
     }
 
+    @SuppressWarnings("null")
     @Override
     public TicketDto updateTicket(Long ticketId, TicketDto dto) {
         Assert.notNull(ticketId, "ID is mandatory");

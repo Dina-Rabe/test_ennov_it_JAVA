@@ -3,14 +3,11 @@ package com.example.springboot;
 import com.example.springboot.controllers.UserController;
 import com.example.springboot.models.User;
 import com.example.springboot.services.IUserService;
-import com.example.springboot.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;

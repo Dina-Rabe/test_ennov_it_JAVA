@@ -3,6 +3,9 @@ package com.example.springboot.models;
 import lombok.*;
 
 import javax.persistence.*;
+
+import com.example.springboot.dto.UserDto;
+
 import java.util.List;
 
 @Entity
@@ -20,4 +23,9 @@ public class User {
 
     @OneToMany(mappedBy = "assignedUser")
     private List<Ticket> assignedTickets;
+
+    public UserDto userDto() {
+        return new UserDto(id, username, email, assignedTickets);
+    }
+
 }
