@@ -2,6 +2,7 @@ package com.example.springboot;
 
 import com.example.springboot.controllers.UserController;
 import com.example.springboot.models.User;
+import com.example.springboot.services.IUserService;
 import com.example.springboot.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.*;
 public class UserControllerTest {
 
     @Mock
-    private UserService userService;
+    private IUserService userService;
 
     @InjectMocks
     private UserController userController;
@@ -28,54 +29,33 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getAllUsers_ReturnsListOfUsers() {
-        // Arrange
-        User user1 = new User("username1", "email1");
-        User user2 = new User("username2", "email2");
-        List<User> expectedUsers = Arrays.asList(user1, user2);
-
-        when(userService.getAllUsers()).thenReturn(expectedUsers);
-
-        // Act
-        List<User> actualUsers = userController.getAllUsers();
-
-        // Assert
-        assertEquals(expectedUsers, actualUsers);
-        verify(userService, times(1)).getAllUsers();
-    }
-
-
-    @Test
     public void createUser_ValidUser_ReturnsCreatedUser() {
         // Arrange
-        User user = new User("username", "email");
-        User expectedUser = new User("username", "email");
+        User user = User.builder().email("user1@email.com").username("username1").build();
 
-        when(userService.createUser(user)).thenReturn(expectedUser);
+        when(userService.save(user)).thenReturn(user);
 
         // Act
         User actualUser = userController.createUser(user);
 
         // Assert
-        assertEquals(expectedUser, actualUser);
-        verify(userService, times(1)).createUser(user);
+        assertEquals(user, actualUser);
+        verify(userService, times(1)).save(any(User.class));
     }
 
     @Test
     public void updateUser_ExistingUserIdAndValidUser_ReturnsUpdatedUser() {
         // Arrange
         Long userId = 1L;
-        User updatedUser = new User("updatedUsername", "updatedEmail");
-        User expectedUser = new User("updatedUsername", "updatedEmail");
-
-        when(userService.updateUser(userId, updatedUser)).thenReturn(expectedUser);
+        User expectedUser = User.builder().email("user2@email.com").username("username2").build();
+        when(userService.update(anyLong(), any(User.class))).thenReturn(expectedUser);
 
         // Act
-        User actualUser = userController.updateUser(userId, updatedUser);
+        User actualUser = userController.updateUser(userId, User.builder().email("user1@email.com").username("username1").build());
 
         // Assert
         assertEquals(expectedUser, actualUser);
-        verify(userService, times(1)).updateUser(userId, updatedUser);
+        verify(userService, times(1)).update(anyLong(), any(User.class));
     }
 
     

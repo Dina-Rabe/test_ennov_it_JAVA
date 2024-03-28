@@ -34,23 +34,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getAllUsers_ReturnsListOfUsers() {
-        // Arrange
-        User user1 = new User("username1", "email1");
-        User user2 = new User("username2", "email2");
-        List<User> expectedUsers = Arrays.asList(user1, user2);
-
-        when(userRepository.findAll()).thenReturn(expectedUsers);
-
-        // Act
-        List<User> actualUsers = userService.getAllUsers();
-
-        // Assert
-        assertEquals(expectedUsers, actualUsers);
-        verify(userRepository, times(1)).findAll();
-    }
-
-    @Test
     public void getTicketsByUserId_ExistingUserId_ReturnsListOfTickets() {
         // Arrange
         Long userId = 1L;

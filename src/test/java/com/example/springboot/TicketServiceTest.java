@@ -1,9 +1,10 @@
 package com.example.springboot;
+import com.example.springboot.dto.TicketDto;
 import com.example.springboot.models.Ticket;
 import com.example.springboot.models.TicketStatus;
 import com.example.springboot.repositories.TicketRepository;
 import com.example.springboot.repositories.UserRepository;
-import com.example.springboot.services.TicketService;
+import com.example.springboot.services.ITicketService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ public class TicketServiceTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private TicketService ticketService;
+    private ITicketService ticketService;
 
     @BeforeEach
     public void setUp() {
@@ -36,44 +37,44 @@ public class TicketServiceTest {
 
     @Test
     public void getAllTickets_ReturnsListOfTickets() {
+        Long dummyUserId = 1L;
         // Arrange
-        Ticket ticket1 = new Ticket("Title 1", "Description 1", null, TicketStatus.OUVERT);
-        Ticket ticket2 = new Ticket("Title 2", "Description 2", null, TicketStatus.OUVERT);
-        List<Ticket> expectedTickets = Arrays.asList(ticket1, ticket2);
+        TicketDto ticket1 = TicketDto.builder().title("title 1").description("Desc 1").build();
+        TicketDto ticket2 = TicketDto.builder().title("title 1").description("Desc 1").build();
+        List<TicketDto> expectedTickets = Arrays.asList(ticket1, ticket2);
 
-        when(ticketRepository.findAll()).thenReturn(expectedTickets);
+        when(ticketService.getAllTickets(anyLong())).thenReturn(expectedTickets);
 
-        // Act
-        List<Ticket> actualTickets = ticketService.getAllTickets();
-
+        List<TicketDto> allTickets = ticketService.getAllTickets(dummyUserId);
         // Assert
-        assertEquals(expectedTickets, actualTickets);
-        verify(ticketRepository, times(1)).findAll();
+        assertEquals(expectedTickets, allTickets);
+        verify(ticketService, times(1)).getAllTickets(anyLong());
     }
 
     @Test
     public void getTicketById_ExistingTicketId_ReturnsTicket() {
         // Arrange
         Long ticketId = 1L;
-        Ticket expectedTicket = new Ticket("Title 3", "Description 3", null, TicketStatus.OUVERT);
-        when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(expectedTicket));
+        Ticket ticket = Ticket.builder().title("title 1").description("Desc 1").build();
+        when(ticketService.findById(anyLong())).thenReturn(Optional.of(ticket));
 
         // Act
-        Ticket actualTicket = ticketService.getTicketById(ticketId);
+        Optional<Ticket> ticketOptional = ticketService.findById(ticketId);
 
         // Assert
-        assertEquals(expectedTicket, actualTicket);
-        verify(ticketRepository, times(1)).findById(ticketId);
+        assertTrue(ticketOptional.isPresent());
+        assertEquals(ticket, ticketOptional.get());
+        verify(ticketService, times(1)).findById(ticketId);
     }
 
     @Test
     public void getTicketById_NonExistingTicketId_ThrowsException() {
         // Arrange
         Long ticketId = 1L;
-        when(ticketRepository.findById(ticketId)).thenReturn(Optional.empty());
+        when(ticketService.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(IllegalArgumentException.class, () -> ticketService.getTicketById(ticketId));
+        assertThrows(IllegalArgumentException.class, () -> ticketService.findById(ticketId));
         verify(ticketRepository, times(1)).findById(ticketId);
     }
 

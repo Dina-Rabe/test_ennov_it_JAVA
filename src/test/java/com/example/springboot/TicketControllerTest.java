@@ -1,27 +1,25 @@
 package com.example.springboot;
 
 import com.example.springboot.controllers.TicketController;
-import com.example.springboot.models.Ticket;
-import com.example.springboot.models.TicketStatus;
-import com.example.springboot.services.TicketService;
+import com.example.springboot.dto.TicketDto;
+import com.example.springboot.services.ITicketService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class TicketControllerTest {
 
     @Mock
-    private TicketService ticketService;
+    private ITicketService ticketService;
 
     @InjectMocks
     private TicketController ticketController;
@@ -33,22 +31,17 @@ public class TicketControllerTest {
 
     @Test
     public void getAllTickets_ReturnsListOfTickets() {
+        Long dummyUserId = 1L;
         // Arrange
-        Ticket ticket1 = new Ticket("Title 1", "Description 1", null, TicketStatus.OUVERT);
-        Ticket ticket2 = new Ticket("Title 2", "Description 2", null, TicketStatus.OUVERT);
-        List<Ticket> expectedTickets = Arrays.asList(ticket1, ticket2);
+        TicketDto ticket1 = TicketDto.builder().title("title 1").description("Desc 1").build();
+        TicketDto ticket2 = TicketDto.builder().title("title 1").description("Desc 1").build();
+        List<TicketDto> expectedTickets = Arrays.asList(ticket1, ticket2);
 
-        when(ticketService.getAllTickets()).thenReturn(expectedTickets);
+        when(ticketService.getAllTickets(anyLong())).then(invocation -> expectedTickets);
 
-        // Act
-        @SuppressWarnings("unchecked")
-        ResponseEntity<List<Ticket>> responseEntity = (ResponseEntity<List<Ticket>>) ticketController.getAllTickets();
-        List<Ticket> actualTickets = responseEntity.getBody();
+        List<TicketDto> responseEntity = ticketController.fetchAll(dummyUserId);
 
-        // Assert
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(expectedTickets, actualTickets);
-        verify(ticketService, times(1)).getAllTickets();
+        assertEquals(expectedTickets, responseEntity);
     }
 
 
@@ -56,15 +49,19 @@ public class TicketControllerTest {
     public void getTicketById_NonExistingTicketId_ReturnsNotFound() {
         // Arrange
         Long ticketId = 1L;
-        when(ticketService.getTicketById(ticketId)).thenThrow(new IllegalArgumentException("Ticket not found"));
+        when(ticketService.findById(anyLong())).thenThrow(new IllegalArgumentException("Ticket not found"));
 
-        // Act
-        Ticket responseEntity = ticketController.getTicketById(ticketId);
+        // Act & Assert
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ticketController.getTicketById(ticketId);
+        });
 
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatus());
-        verify(ticketService, times(1)).getTicketById(ticketId);
+        // You can also check the exception's message if necessary
+        assertEquals("Ticket not found", exception.getMessage());
+
+        // Assert that the method was called once
+        verify(ticketService, times(1)).findById(ticketId);
     }
 
-    
+
 }
