@@ -1,9 +1,8 @@
 package com.example.springboot;
 
 import com.example.springboot.dto.UserDto;
-import com.example.springboot.models.User;
 import com.example.springboot.repositories.UserRepository;
-import com.example.springboot.services.UserService;
+import com.example.springboot.services.IUserService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +22,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserService userService;
+    private IUserService userService;
 
     @BeforeEach
     public void setUp() {
@@ -33,29 +30,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getTicketsByUserId_ExistingUserId_ReturnsListOfTickets() {
-        // Long dummyUserId = 1L;
-        // Arrange
-        UserDto user1 = UserDto.builder().username("User1").email("user1,email.com").build();
-        UserDto user2 = UserDto.builder().username("User2").email("user2,email.com").build();
-        List<User> expectedUsers = Arrays.asList(user1.toEntity(), user2.toEntity());
-
-        when(userService.getAllUsers()).then(invocation -> expectedUsers);
-
-        List<User> responseEntity = userService.getAllUsers();
-
-        assertEquals(expectedUsers, responseEntity);
-    }
-
-    @Test
     public void getTicketsByUserId_NonExistingUserId_ThrowsIllegalArgumentException() {
         // Arrange
         Long userId = 1L;
-
+        UserDto user = UserDto.builder().username("user1").email("user1@email.com").build();
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(IllegalArgumentException.class, () -> userService.getTicketsByUserId(userId));
+        assertThrows(IllegalArgumentException.class, () -> userService.listTicketAssigned(user));
         verify(userRepository, times(1)).findById(userId);
     }
 
@@ -69,7 +51,7 @@ public class UserServiceTest {
         when(userRepository.save(user.toEntity())).thenReturn(expectedUser.toEntity());
 
         // Act
-        User actualUser = userService.createUser(user.toEntity());
+        UserDto actualUser = userService.createUser(user);
 
         // Assert
         assertEquals(expectedUser, actualUser);
@@ -89,7 +71,7 @@ public class UserServiceTest {
         when(userRepository.save(user.toEntity())).thenReturn(expectedUser.toEntity());
 
         // Act
-        User actualUser = userService.updateUser(userId, updatedUser.toEntity());
+        UserDto actualUser = userService.updateUser(userId, updatedUser);
 
         // Assert
         assertEquals(expectedUser, actualUser);
@@ -109,7 +91,7 @@ public class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(IllegalArgumentException.class, () -> userService.updateUser(userId, updatedUser.toEntity()));
+        assertThrows(IllegalArgumentException.class, () -> userService.updateUser(userId, updatedUser));
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, never()).save(any());
     }
